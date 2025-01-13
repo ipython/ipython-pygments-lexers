@@ -30,6 +30,8 @@ This includes:
 # The full license is in the file COPYING.txt, distributed with this software.
 #-----------------------------------------------------------------------------
 
+__version__ = "9.0.0"
+
 # Standard library
 import re
 
@@ -45,7 +47,6 @@ from pygments.token import (
 )
 from pygments.util import get_bool_opt
 
-# Local
 
 line_re = re.compile('.*?\n')
 

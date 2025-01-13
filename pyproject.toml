@@ -1,0 +1,25 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "pygments_lexers_ipython"
+authors = [
+    {name = "The IPython Development Team", email = "ipython-dev@python.org"},
+]
+#readme
+classifiers = [
+    "Framework :: IPython",
+    "License :: OSI Approved :: BSD License",
+]
+requires-python=">=3.11"
+dependencies = [
+    "pygments"
+]
+dynamic=["version", "description"]
+
+[project.entry-points."pygments.lexers"]
+ipythonconsole = "IPython.lib.lexers:IPythonConsoleLexer"
+ipython = "IPython.lib.lexers:IPythonLexer"
+ipython3 = "IPython.lib.lexers:IPython3Lexer"
+

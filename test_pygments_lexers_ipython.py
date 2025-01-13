@@ -8,7 +8,7 @@ from pygments import __version__ as pygments_version
 from pygments.token import Token
 from pygments.lexers import BashLexer
 
-from .. import lexers
+import pygments_lexers_ipython as lexers
 
 pyg214 = tuple(int(x) for x in pygments_version.split(".")[:2]) >= (2, 14)
 
