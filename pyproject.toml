@@ -7,7 +7,7 @@ name = "pygments_lexers_ipython"
 authors = [
     {name = "The IPython Development Team", email = "ipython-dev@python.org"},
 ]
-#readme
+readme = "README.md"
 classifiers = [
     "Framework :: IPython",
     "License :: OSI Approved :: BSD License",
