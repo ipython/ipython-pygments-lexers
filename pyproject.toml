@@ -25,3 +25,8 @@ ipython3 = "IPython.lib.lexers:IPython3Lexer"
 
 [project.urls]
 Source = "https://github.com/ipython/ipython-pygments-lexers"
+
+[tool.flit.sdist]
+include = [
+    "test_*.py",
+]
