@@ -116,10 +116,6 @@ ipython_tokens = [
         bygroups(Text, Operator, Text, using(Python3Lexer)),
     ),
     (
-        r"(?s)(\s*)(%%python)([^\n]*\n)(.*)",
-        bygroups(Text, Operator, Text, using(Python3Lexer)),
-    ),
-    (
         r"(?s)(\s*)(%%python2)([^\n]*\n)(.*)",
         bygroups(Text, Operator, Text, using(Python2Lexer)),
     ),
@@ -128,15 +124,19 @@ ipython_tokens = [
         bygroups(Text, Operator, Text, using(Python3Lexer)),
     ),
     (
+        r"(?s)(\s*)(%%python)([^\n]*\n)(.*)",
+        bygroups(Text, Operator, Text, using(Python3Lexer)),
+    ),
+    (
         r"(?s)(\s*)(%%ruby)([^\n]*\n)(.*)",
         bygroups(Text, Operator, Text, using(RubyLexer)),
     ),
     (
-        r"(?s)(\s*)(%%time)([^\n]*\n)(.*)",
+        r"(?s)(\s*)(%%timeit)([^\n]*\n)(.*)",
         bygroups(Text, Operator, Text, using(Python3Lexer)),
     ),
     (
-        r"(?s)(\s*)(%%timeit)([^\n]*\n)(.*)",
+        r"(?s)(\s*)(%%time)([^\n]*\n)(.*)",
         bygroups(Text, Operator, Text, using(Python3Lexer)),
     ),
     (

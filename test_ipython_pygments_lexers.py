@@ -12,6 +12,8 @@ import ipython_pygments_lexers as lexers
 
 pyg214 = tuple(int(x) for x in pygments_version.split(".")[:2]) >= (2, 14)
 
+TOKEN_WS = Token.Text.Whitespace if pyg214 else Token.Text
+
 
 class TestLexers(TestCase):
     """Collection of lexers tests"""
@@ -71,10 +73,8 @@ class TestLexers(TestCase):
             (Token.Text, " "),
             (Token.Operator, "%"),
             (Token.Keyword, "sx"),
-            (Token.Text, " "),
+            (TOKEN_WS, " "),
         ] + bash_tokens[1:]
-        if tokens_2[7] == (Token.Text, " ") and pyg214:  # pygments 2.14+
-            tokens_2[7] = (Token.Text.Whitespace, " ")
         assert tokens_2[:-1] == list(self.lexer.get_tokens(fragment_2))[:-1]
 
         fragment_2 = "f = %R function () {}\n"
@@ -147,26 +147,26 @@ class TestLexers(TestCase):
             (Token.Text, " "),
             (Token.Name, "b"),
             (Token.Punctuation, ":"),
-            (Token.Text, "\n"),
+            (TOKEN_WS, "\n"),
             (Token.Text, "    "),
             (Token.Keyword, "pass"),
-            (Token.Text, "\n"),
+            (TOKEN_WS, "\n"),
         ]
-        if tokens[10] == (Token.Text, "\n") and pyg214:  # pygments 2.14+
-            tokens[10] = (Token.Text.Whitespace, "\n")
-        assert tokens[:-1] == list(self.lexer.get_tokens(fragment))[:-1]
+        assert tokens == list(self.lexer.get_tokens(fragment))
 
         fragment = "%%timeit\nmath.sin(0)"
         tokens = [
-            (Token.Operator, "%%timeit\n"),
+            (Token.Operator, "%%timeit"),
+            (Token.Text, "\n"),
             (Token.Name, "math"),
             (Token.Operator, "."),
             (Token.Name, "sin"),
             (Token.Punctuation, "("),
             (Token.Literal.Number.Integer, "0"),
             (Token.Punctuation, ")"),
-            (Token.Text, "\n"),
+            (TOKEN_WS, "\n"),
         ]
+        assert tokens == list(self.lexer.get_tokens(fragment))
 
         fragment = "%%HTML\n<div>foo</div>"
         tokens = [
