@@ -42,7 +42,7 @@ from pygments.lexers import (
     JavascriptLexer,
     RubyLexer,
     PerlLexer,
-    PythonLexer,
+    Python2Lexer,
     Python3Lexer,
     TexLexer,
 )
@@ -64,7 +64,6 @@ from pygments.token import (
     Text,
     Error,
 )
-from pygments.util import get_bool_opt
 
 
 line_re = re.compile(".*?\n")
@@ -122,7 +121,7 @@ ipython_tokens = [
     ),
     (
         r"(?s)(\s*)(%%python2)([^\n]*\n)(.*)",
-        bygroups(Text, Operator, Text, using(PythonLexer)),
+        bygroups(Text, Operator, Text, using(Python2Lexer)),
     ),
     (
         r"(?s)(\s*)(%%python3)([^\n]*\n)(.*)",
