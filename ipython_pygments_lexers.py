@@ -30,7 +30,7 @@ This includes:
 # The full license is in the file COPYING.txt, distributed with this software.
 # -----------------------------------------------------------------------------
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # Standard library
 import re
