@@ -8,6 +8,7 @@ authors = [
     {name = "The IPython Development Team", email = "ipython-dev@python.org"},
 ]
 readme = "README.md"
+license = {file = "LICENSE"}
 classifiers = [
     "Framework :: IPython",
     "License :: OSI Approved :: BSD License",
