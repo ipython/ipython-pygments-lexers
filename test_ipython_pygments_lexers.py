@@ -202,3 +202,28 @@ def test_cell_magics():
         (Token.Text, "\n$foo\n"),
     ]
     assert tokens_2 == list(lexer.get_tokens(fragment_2))
+
+
+def test_traceback_multiline_message_backticks():
+    """A multiline exception message must not produce Error tokens.
+
+    Continuation lines of an exception message are plain text, not Python.
+    If they were emitted as Other, the delegating IPythonTracebackLexer would
+    re-lex them as Python, and backticks in the message would become Error
+    tokens (see ipython/ipython#14142).
+    """
+    from pygments import highlight
+    from pygments.formatters import HtmlFormatter
+    from pygments.filters import RaiseOnErrorTokenFilter
+    from pygments.token import Error
+
+    from ipython_pygments_lexers import IPythonTracebackLexer
+
+    code = "TypeError: `foo` is deprecated.\nUse `bar` instead.\n"
+    lexer = IPythonTracebackLexer()
+
+    assert Error not in {t for t, _ in lexer.get_tokens(code)}
+
+    # RaiseOnErrorTokenFilter would raise if any Error token is produced.
+    filtered = IPythonTracebackLexer(filters=[RaiseOnErrorTokenFilter()])
+    highlight(code, filtered, HtmlFormatter())

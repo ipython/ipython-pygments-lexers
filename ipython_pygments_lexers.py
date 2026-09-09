@@ -232,8 +232,11 @@ class IPythonPartialTracebackLexer(RegexLexer):
             ),
             # (Exception Identifier)(Message)
             (r"(?u)(^[^\d\W]\w*)(:.*?\n)", bygroups(Name.Exception, Text)),
-            # Tag everything else as Other, will be handled later.
-            (r".*\n", Other),
+            # Tag everything else as text.  Using Other here would make the
+            # delegating IPythonTracebackLexer hand these lines to the Python
+            # lexer, which emits Error tokens for text that is not valid Python
+            # (e.g. exception messages containing backticks).
+            (r".*\n", Text),
         ],
     }
 
