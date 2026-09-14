@@ -202,3 +202,54 @@ def test_cell_magics():
         (Token.Text, "\n$foo\n"),
     ]
     assert tokens_2 == list(lexer.get_tokens(fragment_2))
+
+
+@pytest.mark.parametrize("magic", ["%%time", "%%timeit", "%%capture", "%%prun"])
+def test_shell_commands_inside_ipython_input_cell_magics(magic):
+    """Shell escapes keep working inside cell magics that run IPython input.
+
+    ``%%time``, ``%%timeit``, ``%%capture`` and ``%%prun`` all pass their body
+    through the IPython input transformer, so ``!cmd`` reaches the system shell.
+    Lexing the body as plain Python instead flags the ``!`` as an error.
+    """
+    lexer = lexers.IPythonLexer()
+    fragment = f"{magic}\n!cmd\n"
+    tokens = [
+        (Token.Operator, magic),
+        (Token.Text, "\n"),
+        (Token.Operator, "!"),
+        (Token.Text, "cmd"),
+        (TOKEN_WS, "\n"),
+    ]
+    # The trailing newline's token type varies with the pygments version, so
+    # compare the body tokens, as ``test_shell_commands`` does.
+    assert tokens[:-1] == list(lexer.get_tokens(fragment))[:-1]
+
+
+@pytest.mark.parametrize("magic", ["%%debug", "%%python", "%%writefile foo.py"])
+def test_no_shell_commands_where_the_body_is_not_ipython_input(magic):
+    """A ``!`` is not a shell escape in cell magics that do not run IPython input.
+
+    ``%%debug`` runs the body under pdb, ``%%python`` runs it in a separate
+    interpreter, and ``%%writefile`` writes it verbatim, so these bodies stay
+    plain Python and must not gain the IPython shell-escape rule.
+    """
+    lexer = lexers.IPythonLexer()
+    tokens = list(lexer.get_tokens(f"{magic}\n!cmd\n"))
+    assert (Token.Error, "!") in tokens
+    assert (Token.Operator, "!") not in tokens
+
+
+def test_python_still_lexes_inside_a_timing_magic():
+    """Delegating to this lexer's root keeps ordinary Python highlighting."""
+    lexer = lexers.IPythonLexer()
+    fragment = "%%time\nimport math\n"
+    tokens = [
+        (Token.Operator, "%%time"),
+        (Token.Text, "\n"),
+        (Token.Keyword.Namespace, "import"),
+        (TOKEN_WS, " "),
+        (Token.Name.Namespace, "math"),
+        (TOKEN_WS, "\n"),
+    ]
+    assert tokens[:-1] == list(lexer.get_tokens(fragment))[:-1]
