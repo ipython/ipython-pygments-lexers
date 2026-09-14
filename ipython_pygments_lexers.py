@@ -53,6 +53,7 @@ from pygments.lexer import (
     do_insertions,
     bygroups,
     using,
+    this,
 )
 from pygments.token import (
     Generic,
@@ -78,10 +79,17 @@ __all__ = [
 ]
 
 
+# Cell magics whose body is IPython input delegate to this lexer's own root
+# state, so shell escapes (`!cmd`), line magics and the rest of the IPython
+# grammar keep working inside them. The remaining Python-running magics keep
+# delegating to `Python3Lexer`, because their bodies are not IPython input:
+# `%%debug` runs the body under pdb, `%%python`/`%%python2`/`%%python3`/`%%pypy`
+# run it in a separate interpreter, and `%%writefile`/`%%file` treat it as
+# literal file content.
 ipython_tokens = [
     (
         r"(?s)(\s*)(%%capture)([^\n]*\n)(.*)",
-        bygroups(Text, Operator, Text, using(Python3Lexer)),
+        bygroups(Text, Operator, Text, using(this)),
     ),
     (
         r"(?s)(\s*)(%%debug)([^\n]*\n)(.*)",
@@ -109,7 +117,7 @@ ipython_tokens = [
     ),
     (
         r"(?s)(\s*)(%%prun)([^\n]*\n)(.*)",
-        bygroups(Text, Operator, Text, using(Python3Lexer)),
+        bygroups(Text, Operator, Text, using(this)),
     ),
     (
         r"(?s)(\s*)(%%pypy)([^\n]*\n)(.*)",
@@ -133,11 +141,11 @@ ipython_tokens = [
     ),
     (
         r"(?s)(\s*)(%%timeit)([^\n]*\n)(.*)",
-        bygroups(Text, Operator, Text, using(Python3Lexer)),
+        bygroups(Text, Operator, Text, using(this)),
     ),
     (
         r"(?s)(\s*)(%%time)([^\n]*\n)(.*)",
-        bygroups(Text, Operator, Text, using(Python3Lexer)),
+        bygroups(Text, Operator, Text, using(this)),
     ),
     (
         r"(?s)(\s*)(%%writefile)([^\n]*\n)(.*)",
